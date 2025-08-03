@@ -90,7 +90,7 @@ bot.action(/audio_(.+)/, async (ctx) => {
   const slug = ctx.match[1];
   const tale = tales.find((t) => t.slug === slug);
   if (!tale || !tale.audio_url) return ctx.reply("Аудио пока недоступно");
-  await ctx.replyWithVoice({ url: tale.audio_url });
+  await ctx.replyWithVoice(tale.audio_id);
 });
 
 bot.action("volver", (ctx) => {
@@ -106,3 +106,10 @@ bot.action("volver", (ctx) => {
 });
 
 module.exports = bot;
+
+// ВРЕМЕННЫЙ ОБРАБОТЧИК ДЛЯ ПОЛУЧЕНИЯ file_id
+bot.on("voice", (ctx) => {
+  const fileId = ctx.message.voice.file_id;
+  console.log("VOICE file_id:", fileId);
+  ctx.reply(`file_id: ${fileId}`);
+});
