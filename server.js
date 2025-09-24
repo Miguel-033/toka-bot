@@ -1,14 +1,12 @@
 require("dotenv").config();
 const express = require("express");
-const { Telegraf } = require("telegraf");
 const cron = require("node-cron");
 const wordOfDay = require("./modules/wordOfDay");
 
 const app = express();
-const bot = new Telegraf(process.env.BOT_TOKEN);
 
-// Основная логика бота
-require("./botLogic"); // ⚠️ без (bot), потому что botLogic.js уже экспортирует bot
+// Подключаем готовый бот из botLogic.js
+const bot = require("./botLogic");
 
 // эндпоинт для проверки
 app.get("/", (req, res) => {
@@ -21,7 +19,7 @@ app.get("/test-wod", async (req, res) => {
   res.send("✅ WOD отправлено");
 });
 
-// привязка вебхука
+// Привязываем вебхук
 app.use(bot.webhookCallback("/telegram"));
 
 const PORT = process.env.PORT || 3000;
