@@ -1,3 +1,4 @@
+// botLogic.js
 const { Telegraf, Markup } = require("telegraf");
 const https = require("https");
 const path = require("path");
@@ -86,6 +87,18 @@ bot.hears(levels, (ctx) => {
   });
 });
 
+bot.hears("🔁 Сменить уровень", (ctx) => {
+  ctx.reply("Выбери новый уровень:", {
+    reply_markup: {
+      keyboard: levels
+        .map((lvl, i) => (i % 2 === 0 ? [lvl, levels[i + 1]] : []))
+        .filter((r) => r.length),
+      resize_keyboard: true,
+      one_time_keyboard: true,
+    },
+  });
+});
+
 // ==========================
 // Сказки
 // ==========================
@@ -106,14 +119,33 @@ bot.action(/tale_(.+)/, (ctx) => {
   const tale = tales.find((t) => t.slug === slug);
   if (!tale) return ctx.answerCbQuery("Не найдено");
 
+  const favBtn = getFavButton(ctx.from.id, "tale", slug);
+
   ctx.replyWithMarkdownV2(
     `*${tale.title}*`,
     Markup.inlineKeyboard([
       [Markup.button.callback("📖 Читать", `readTale_${slug}`)],
       [Markup.button.callback("🔊 Слушать", `audio_${slug}`)],
+      [favBtn],
       [Markup.button.callback("⬅️ Назад", "volverTales")],
     ])
   );
+});
+
+bot.action(/readTale_(.+)/, (ctx) => {
+  const slug = ctx.match[1];
+  const tale = tales.find((t) => t.slug === slug);
+  if (!tale) return ctx.answerCbQuery("Не найдено");
+  ctx.reply(tale.text);
+});
+
+bot.action(/audio_(.+)/, async (ctx) => {
+  const slug = ctx.match[1];
+  const tale = tales.find((t) => t.slug === slug);
+  if (!tale || !tale.audio_id)
+    return ctx.answerCbQuery("Аудио пока недоступно");
+  await ctx.answerCbQuery();
+  await ctx.telegram.sendVoice(ctx.chat.id, tale.audio_id);
 });
 
 // ==========================
@@ -140,14 +172,163 @@ bot.action(/relato_(.+)/, (ctx) => {
   const relato = relatos.find((r) => r.slug === slug);
   if (!relato) return ctx.answerCbQuery("Не найдено");
 
+  const favBtn = getFavButton(ctx.from.id, "relato", slug);
+
   ctx.replyWithMarkdownV2(
     `*${relato.title}*`,
     Markup.inlineKeyboard([
       [Markup.button.callback("📖 Читать", `readRelato_${slug}`)],
       [Markup.button.callback("🔊 Слушать", `audioRelato_${slug}`)],
+      [favBtn],
       [Markup.button.callback("⬅️ Назад", "volverRelatos")],
     ])
   );
+});
+
+bot.action(/readRelato_(.+)/, (ctx) => {
+  const slug = ctx.match[1];
+  const relato = relatos.find((r) => r.slug === slug);
+  if (!relato) return ctx.answerCbQuery("Не найдено");
+  ctx.reply(relato.text);
+});
+
+bot.action(/audioRelato_(.+)/, async (ctx) => {
+  const slug = ctx.match[1];
+  const relato = relatos.find((r) => r.slug === slug);
+  if (!relato || !relato.audio_id)
+    return ctx.answerCbQuery("Аудио пока недоступно");
+  await ctx.answerCbQuery();
+  await ctx.telegram.sendVoice(ctx.chat.id, relato.audio_id);
+});
+
+// ==========================
+// Избранное
+// ==========================
+function getFavButton(userId, type, slug) {
+  const favs = getUserFavorites(userId);
+  const isFav = favs.some((item) => item.slug === slug && item.type === type);
+  const prefix = type === "tale" ? "favTale" : "favRelato";
+  const label = isFav ? "❌ Удалить из избранного" : "⭐ В избранное";
+  return Markup.button.callback(label, `${prefix}_${slug}`);
+}
+
+bot.action(/favTale_(.+)/, async (ctx) => {
+  const slug = ctx.match[1];
+  const tale = tales.find((t) => t.slug === slug);
+  if (!tale) return ctx.answerCbQuery("Не найдено");
+
+  const favs = getUserFavorites(ctx.from.id);
+  const exists = favs.some(
+    (item) => item.slug === slug && item.type === "tale"
+  );
+
+  if (exists) {
+    removeFavorite(ctx.from.id, { slug, type: "tale" });
+  } else {
+    addFavorite(ctx.from.id, { slug, type: "tale" });
+  }
+
+  const updatedBtn = getFavButton(ctx.from.id, "tale", slug);
+  await ctx.editMessageReplyMarkup(
+    Markup.inlineKeyboard([
+      [Markup.button.callback("📖 Читать", `readTale_${slug}`)],
+      [Markup.button.callback("🔊 Слушать", `audio_${slug}`)],
+      [updatedBtn],
+      [Markup.button.callback("⬅️ Назад", "volverTales")],
+    ])
+  );
+});
+
+bot.action(/favRelato_(.+)/, async (ctx) => {
+  const slug = ctx.match[1];
+  const relato = relatos.find((r) => r.slug === slug);
+  if (!relato) return ctx.answerCbQuery("Не найдено");
+
+  const favs = getUserFavorites(ctx.from.id);
+  const exists = favs.some(
+    (item) => item.slug === slug && item.type === "relato"
+  );
+
+  if (exists) {
+    removeFavorite(ctx.from.id, { slug, type: "relato" });
+  } else {
+    addFavorite(ctx.from.id, { slug, type: "relato" });
+  }
+
+  const updatedBtn = getFavButton(ctx.from.id, "relato", slug);
+  await ctx.editMessageReplyMarkup(
+    Markup.inlineKeyboard([
+      [Markup.button.callback("📖 Читать", `readRelato_${slug}`)],
+      [Markup.button.callback("🔊 Слушать", `audioRelato_${slug}`)],
+      [updatedBtn],
+      [Markup.button.callback("⬅️ Назад", "volverRelatos")],
+    ])
+  );
+});
+
+bot.hears("⭐ Избранное", (ctx) => {
+  const favs = getUserFavorites(ctx.from.id);
+  if (!favs.length)
+    return ctx.reply("У тебя нет избранных сказок или рассказов");
+
+  const buttons = favs
+    .map((item) => {
+      const list = item.type === "tale" ? tales : relatos;
+      const story = list.find((s) => s.slug === item.slug);
+      if (!story) return null;
+      const prefix = item.type === "tale" ? "tale_" : "relato_";
+      return [Markup.button.callback(story.title, `${prefix}${item.slug}`)];
+    })
+    .filter(Boolean);
+
+  ctx.reply("⭐ Твои избранные:", Markup.inlineKeyboard(buttons));
+});
+
+// ==========================
+// Назад
+// ==========================
+bot.action("volverTales", (ctx) => {
+  const level = userLevels.get(ctx.from.id);
+  const talesList = tales.filter((t) => t.level === level);
+  const buttons = talesList.map((t) => [
+    Markup.button.callback(t.title, `tale_${t.slug}`),
+  ]);
+  ctx.editMessageText(
+    `Сказки уровня ${level}:`,
+    Markup.inlineKeyboard(buttons)
+  );
+});
+
+bot.action("volverRelatos", (ctx) => {
+  const level = userLevels.get(ctx.from.id);
+  const relatosList = relatos.filter((r) => r.level === level);
+  const buttons = relatosList.map((r) => [
+    Markup.button.callback(r.title, `relato_${r.slug}`),
+  ]);
+  ctx.editMessageText(
+    `Рассказы уровня ${level}:`,
+    Markup.inlineKeyboard(buttons)
+  );
+});
+
+// ==========================
+// Слово дня (cron + ручной запуск)
+// ==========================
+const wod = setupWordOfDay(bot, {
+  timezone: "Europe/Madrid",
+  hour: 10,
+  minute: 0,
+});
+
+bot.command("wod_now", async (ctx) => {
+  await ctx.reply("Запускаю рассылку «слово дня» прямо сейчас…");
+  try {
+    await wod.broadcast();
+    await ctx.reply("✅ Готово");
+  } catch (e) {
+    console.error(e);
+    await ctx.reply("❌ Ошибка, смотри логи.");
+  }
 });
 
 // ==========================
