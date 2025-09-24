@@ -101,6 +101,21 @@ bot.hears("📚 Сказки", (ctx) => {
   ctx.reply(`Вот сказки для уровня ${level}:`, Markup.inlineKeyboard(buttons));
 });
 
+bot.action(/tale_(.+)/, (ctx) => {
+  const slug = ctx.match[1];
+  const tale = tales.find((t) => t.slug === slug);
+  if (!tale) return ctx.answerCbQuery("Не найдено");
+
+  ctx.replyWithMarkdownV2(
+    `*${tale.title}*`,
+    Markup.inlineKeyboard([
+      [Markup.button.callback("📖 Читать", `readTale_${slug}`)],
+      [Markup.button.callback("🔊 Слушать", `audio_${slug}`)],
+      [Markup.button.callback("⬅️ Назад", "volverTales")],
+    ])
+  );
+});
+
 // ==========================
 // Рассказы
 // ==========================
@@ -120,53 +135,19 @@ bot.hears("📖 Рассказы", (ctx) => {
   );
 });
 
-// ==========================
-// Избранное
-// ==========================
-bot.hears("⭐ Избранное", (ctx) => {
-  const favs = getUserFavorites(ctx.from.id);
-  if (!favs.length)
-    return ctx.reply("У тебя нет избранных сказок или рассказов");
+bot.action(/relato_(.+)/, (ctx) => {
+  const slug = ctx.match[1];
+  const relato = relatos.find((r) => r.slug === slug);
+  if (!relato) return ctx.answerCbQuery("Не найдено");
 
-  const buttons = favs
-    .map((item) => {
-      const list = item.type === "tale" ? tales : relatos;
-      const story = list.find((s) => s.slug === item.slug);
-      if (!story) return null;
-      const prefix = item.type === "tale" ? "tale_" : "relato_";
-      return [Markup.button.callback(story.title, `${prefix}${item.slug}`)];
-    })
-    .filter(Boolean);
-
-  ctx.reply("⭐ Твои избранные:", Markup.inlineKeyboard(buttons));
-});
-
-function getFavButton(userId, type, slug) {
-  const favs = getUserFavorites(userId);
-  const isFav = favs.some((item) => item.slug === slug && item.type === type);
-  const prefix = type === "tale" ? "favTale" : "favRelato";
-  const label = isFav ? "❌ Удалить из избранного" : "⭐ В избранное";
-  return Markup.button.callback(label, `${prefix}_${slug}`);
-}
-
-// ==========================
-// Слово дня (cron + ручной запуск)
-// ==========================
-const wod = setupWordOfDay(bot, {
-  timezone: "Europe/Madrid",
-  hour: 10,
-  minute: 0,
-});
-
-bot.command("wod_now", async (ctx) => {
-  await ctx.reply("Запускаю рассылку «слово дня» прямо сейчас…");
-  try {
-    await wod.broadcast();
-    await ctx.reply("✅ Готово");
-  } catch (e) {
-    console.error(e);
-    await ctx.reply("❌ Ошибка, смотри логи.");
-  }
+  ctx.replyWithMarkdownV2(
+    `*${relato.title}*`,
+    Markup.inlineKeyboard([
+      [Markup.button.callback("📖 Читать", `readRelato_${slug}`)],
+      [Markup.button.callback("🔊 Слушать", `audioRelato_${slug}`)],
+      [Markup.button.callback("⬅️ Назад", "volverRelatos")],
+    ])
+  );
 });
 
 // ==========================

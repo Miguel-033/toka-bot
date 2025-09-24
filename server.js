@@ -1,11 +1,10 @@
 require("dotenv").config();
 const express = require("express");
-const cron = require("node-cron");
 const wordOfDay = require("./modules/wordOfDay");
 
 const app = express();
 
-// Подключаем готовый бот из botLogic.js
+// Подключаем готовый бот
 const bot = require("./botLogic");
 
 // эндпоинт для проверки
