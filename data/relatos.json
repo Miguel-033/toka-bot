@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1754593207025,
+    "slug": "un-viaje-a-la-playa",
+    "title": "Un viaje a la playa",
+    "level": "A1",
+    "type": "relato",
+    "text": "El fin de semana pasado, fui a la playa con mi familia.\nViajamos en coche durante dos horas.\nHacía sol y calor.\nNadé en el mar y jugué con la arena.\nComimos bocadillos y bebimos agua.\nFue un día muy divertido.\nMe gusta mucho viajar con mi familia.",
+    "audio_id": "AwACAgQAAyEFAASkWWcSAAMHaJT3ir1Za8K0VepQKDoCoOPOFB4AAo8cAAJ2zahQzHxDZucOOcA2BA",
+    "genre": "viajes"
+  },
+  {
+    "id": 1754593617580,
+    "slug": "viaje-a-la-montana",
+    "title": "Viaje a la montaña",
+    "level": "A1",
+    "type": "relato",
+    "text": "El mes pasado, fui a la montaña con mis amigos.\nHicimos una caminata por el bosque.\nVimos árboles, flores y un río muy bonito.\nLlevamos mochilas con comida y agua.\nSacamos muchas fotos.\nEstaba un poco cansado, pero muy feliz.\n¡Me encanta la naturaleza!",
+    "audio_id": "AwACAgQAAyEFAASkWWcSAAMIaJT5KGGKPC6r6uaAvaOu3fkSIpwAApUcAAJ2zahQwH0yHiJi3so2BA",
+    "genre": "viajes"
+  },
+  {
+    "id": 1754593795448,
+    "slug": "un-viaje-a-madrid",
+    "title": "Un viaje a Madrid",
+    "level": "A1",
+    "type": "relato",
+    "text": "Este verano, visité Madrid con mi hermana.\nFuimos en tren desde Valencia.\nVisitamos museos, plazas y parques.\nComimos tapas en un restaurante típico.\nHacía calor, pero caminamos mucho.\nMadrid es una ciudad muy grande y bonita.\nQuiero volver el próximo año.",
+    "audio_id": "AwACAgQAAyEFAASkWWcSAAMJaJT56cY0gQJpfiaPSdqIteoi08wAApccAAJ2zahQqp0KUYru7ug2BA",
+    "genre": "viajes"
+  }
+]

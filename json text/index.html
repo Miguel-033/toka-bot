@@ -1,0 +1,298 @@
+<!-- <!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Генератор JSON</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        max-width: 700px;
+        margin: 20px auto;
+      }
+      input,
+      textarea,
+      select {
+        width: 100%;
+        margin-bottom: 15px;
+        padding: 10px;
+      }
+      button {
+        margin-right: 10px;
+        padding: 10px 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Генератор JSON</h2>
+
+    <label>Название сказки:</label>
+    <input type="text" id="title" placeholder="escribe aqui" />
+
+    <label>Уровень:</label>
+    <select id="level">
+      <option value="">-- Выберите уровень --</option>
+      <option value="A1">A1</option>
+      <option value="A2">A2</option>
+      <option value="B1">B1</option>
+      <option value="B2">B2</option>
+    </select>
+
+    <label>Текст сказки:</label>
+    <textarea id="text" rows="6"></textarea>
+
+    <label>Audio ID (опционально):</label>
+    <input
+      type="text"
+      id="audio_id"
+      placeholder="file_id или оставить пустым"
+    />
+
+    <button onclick="generateJSON()">Сформировать JSON</button>
+    <button onclick="resetFields()">Сбросить поля</button>
+
+    <h3>Результат:</h3>
+    <textarea id="result" rows="10" readonly></textarea>
+
+    <script>
+      function slugify(text) {
+        return text
+          .toString()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase()
+          .replace(/\s+/g, "-")
+          .replace(/[^\w\-]+/g, "")
+          .replace(/\-\-+/g, "-")
+          .replace(/^-+/, "")
+          .replace(/-+$/, "");
+      }
+
+      function generateJSON() {
+        const title = document.getElementById("title").value.trim();
+        const level = document.getElementById("level").value.trim();
+        const text = document.getElementById("text").value.trim();
+        const audio_id = document.getElementById("audio_id").value.trim();
+
+        if (!title || !level || !text) {
+          alert("Заполните название, уровень и текст.");
+          return;
+        }
+
+        const slug = slugify(title);
+
+        const json = {
+          id: 1,
+          slug: slug,
+          title: title,
+          level: level,
+          text: text,
+          audio_id: audio_id || "...",
+        };
+
+        document.getElementById("result").value = JSON.stringify(json, null, 2);
+      }
+
+      function resetFields() {
+        document.getElementById("title").value = "";
+        document.getElementById("level").value = "";
+        document.getElementById("text").value = "";
+        document.getElementById("audio_id").value = "";
+        document.getElementById("result").value = "";
+      }
+    </script>
+  </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Генератор JSON</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 20px;
+        max-width: 800px;
+        margin: auto;
+      }
+      input,
+      textarea,
+      select,
+      button {
+        width: 100%;
+        margin-bottom: 12px;
+        padding: 8px;
+        font-size: 16px;
+      }
+      #genreBlock {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Генератор JSON</h2>
+
+    <label>Название (title):</label>
+    <input type="text" id="title" oninput="updateSlug()" />
+
+    <label>Уровень:</label>
+    <select id="level">
+      <option value="">— выбери уровень —</option>
+      <option value="A1">A1</option>
+      <option value="A2">A2</option>
+      <option value="B1">B1</option>
+      <option value="B2">B2</option>
+    </select>
+
+    <label>Тип:</label>
+    <select id="type" onchange="handleTypeChange()">
+      <option value="cuento">Cuento (сказка)</option>
+      <option value="relato">Relato (рассказ)</option>
+    </select>
+
+    <div id="genreBlock">
+      <label>Жанр (только для рассказов):</label>
+      <select id="genre" onchange="handleGenreChange()">
+        <option value="">— выберите жанр —</option>
+        <option value="viajes">Путешествия</option>
+        <option value="comida">Еда</option>
+        <option value="romance">Романтика</option>
+        <option value="humor">Юмор</option>
+        <option value="trabajo">Работа</option>
+        <option value="otro">Другое...</option>
+      </select>
+      <input
+        type="text"
+        id="customGenre"
+        placeholder="Введите свой жанр"
+        style="display: none"
+      />
+    </div>
+
+    <label>Текст сказки/рассказа:</label>
+    <textarea id="text" rows="6"></textarea>
+
+    <label>Audio ID:</label>
+    <input type="text" id="audio_id" />
+
+    <label>Slug (авто):</label>
+    <input type="text" id="slug" readonly />
+
+    <button onclick="generateJSON()">Сформировать JSON</button>
+    <button onclick="resetFields()">Сбросить поля</button>
+    <button onclick="copyResult()">📋 Скопировать JSON</button>
+
+    <label>Результат:</label>
+    <textarea id="result" rows="10" readonly></textarea>
+
+    <script>
+      function slugify(text) {
+        return text
+          .toString()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase()
+          .replace(/\s+/g, "-")
+          .replace(/[^\w\-]+/g, "")
+          .replace(/\-\-+/g, "-")
+          .replace(/^-+/, "")
+          .replace(/-+$/, "");
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const titleInput = document.getElementById("title");
+        const slugInput = document.getElementById("slug");
+
+        titleInput.addEventListener("input", () => {
+          if (slugInput) {
+            slugInput.value = slugify(titleInput.value);
+          }
+        });
+      });
+
+      function updateSlug() {
+        const title = document.getElementById("title").value;
+        document.getElementById("slug").value = slugify(title);
+      }
+
+      function handleTypeChange() {
+        const type = document.getElementById("type").value;
+        document.getElementById("genreBlock").style.display =
+          type === "relato" ? "block" : "none";
+      }
+
+      function handleGenreChange() {
+        const genre = document.getElementById("genre").value;
+        document.getElementById("customGenre").style.display =
+          genre === "otro" ? "block" : "none";
+      }
+
+      function generateID() {
+        return Date.now();
+      }
+
+      function generateJSON() {
+        const title = document.getElementById("title").value.trim();
+        const level = document.getElementById("level").value.trim();
+        const type = document.getElementById("type").value;
+        const genre = document.getElementById("genre").value;
+        const customGenre = document.getElementById("customGenre").value.trim();
+        const text = document.getElementById("text").value.trim();
+        const audio_id = document.getElementById("audio_id").value.trim();
+        const slug = document.getElementById("slug").value;
+
+        if (!title || !level || !text || !slug) {
+          alert("Пожалуйста, заполните все обязательные поля.");
+          return;
+        }
+
+        const json = {
+          id: generateID(),
+          slug,
+          title,
+          level,
+          type,
+          text,
+          audio_id: audio_id || "...",
+        };
+
+        if (type === "relato") {
+          json.genre = (genre === "otro" ? customGenre : genre) || "otro";
+        }
+
+        document.getElementById("result").value = JSON.stringify(json, null, 2);
+      }
+
+      function resetFields() {
+        document.getElementById("title").value = "";
+        document.getElementById("level").value = "";
+        document.getElementById("type").value = "cuento";
+        document.getElementById("genre").value = "";
+        document.getElementById("customGenre").value = "";
+        document.getElementById("text").value = "";
+        document.getElementById("audio_id").value = "";
+        document.getElementById("slug").value = "";
+        document.getElementById("result").value = "";
+        document.getElementById("genreBlock").style.display = "none";
+        document.getElementById("customGenre").style.display = "none";
+      }
+
+      function copyResult() {
+        const resultField = document.getElementById("result");
+        resultField.select();
+        resultField.setSelectionRange(0, 99999);
+
+        try {
+          const success = document.execCommand("copy");
+          if (success) {
+            alert("✅ JSON скопирован!");
+          } else {
+            alert("❌ Не удалось скопировать.");
+          }
+        } catch (err) {
+          alert("❌ Ошибка при копировании: " + err);
+        }
+      }
+    </script>
+  </body>
+</html>

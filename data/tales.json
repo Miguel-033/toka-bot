@@ -1,10 +1,26 @@
 [
   {
     "id": 1,
-    "slug": "rana-perezosa",
+    "slug": "la-rana-perezosa",
     "title": "La rana perezosa",
     "level": "A1",
-    "text": "Había una vez una rana muy perezosa...",
-    "audio_id": "AwACAgQAAyEFAASkWWcSAAMCaI-4hsaVfc4frCZ0_gABlYIdM0AfAAIXHQACEBB5UBzz2t9nKtX4NgQ"
+    "text": "Había una vez una rana muy perezosa.\nNo le gustaba saltar, ni nadar, ni cazar moscas.\nSolo quería dormir todo el día sobre una hoja grande.\n\nUn día, todos los animales del bosque fueron a una fiesta.\nHabía música, comida y muchos juegos.\nPero la rana dijo:\n—No, gracias. Prefiero dormir.\n\nCuando se despertó, todo estaba silencioso.\nNo había nadie.\nSe sintió muy sola.\n\nAl día siguiente, decidió cambiar.\nSaltó, nadó y fue a ver a sus amigos.\nDesde entonces, la rana ya no era tan perezosa.",
+    "audio_id": "AwACAgQAAyEFAASkWWcSAAMEaI_z0-i4bQQ8f_u6EesJgXdSOkgAAvQXAAIQEIFQZzpCSZKae4I2BA"
+  },
+  {
+    "id": 2,
+    "slug": "el-gato-curioso",
+    "title": "El gato curioso",
+    "level": "A1",
+    "text": "Tomás era un gato blanco y gris.\nVivía en una casa con una familia muy amable.\nEra curioso, muy curioso.\n\nUn día, escuchó un ruido extraño en el desván.\nSubió poco a poco, paso a paso.\nEncontró una caja vieja.\nLa caja estaba cerrada, pero no con llave.\n\nLa abrió y vio muchos juguetes antiguos.\nUn tren de madera, una muñeca sin cabeza, una pelota de cuero.\n\nTomás empezó a jugar con ellos.\nCada tarde, después de su siesta, subía al desván.\nYa no tenía miedo.\nEl desván era ahora su lugar favorito.",
+    "audio_id": "AwACAgQAAyEFAASkWWcSAAMFaI_z1o3nouptUzFI47tjV2T3qDoAAvUXAAIQEIFQWLO23sgxr4o2BA"
+  },
+  {
+    "id": 3,
+    "slug": "el-arbol-sabio",
+    "title": "El árbol sabio",
+    "level": "A1",
+    "text": "En el centro del bosque había un árbol muy alto y viejo.\nTodos los animales lo llamaban el “árbol sabio”.\n\nEl árbol no hablaba, pero escuchaba.\nLos animales venían a contarle sus problemas.\nSolo con estar cerca, se sentían mejor.\n\nUn día, un ciervo joven se perdió.\nCorrió sin mirar y llegó hasta el árbol.\n\n—Estoy perdido —dijo.\n\nEl árbol no dijo nada, pero sus ramas se movieron con el viento.\nEl ciervo miró alrededor.\nVio un camino pequeño, lleno de hojas.\n\nLo siguió y encontró su hogar.\nDesde ese día, el ciervo siempre pasaba a saludar al árbol sabio.",
+    "audio_id": "AwACAgQAAyEFAASkWWcSAAMGaI_z2k1MVjJAUy8NxeguFASXXUMAAvYXAAIQEIFQTjCamIlSM-g2BA"
   }
 ]

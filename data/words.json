@@ -1,0 +1,92 @@
+[
+  {
+    "word": "desvelarse",
+    "translation": "не спать, бодрствовать",
+    "partOfSpeech": "verbo",
+    "example": "Me desvelé toda la noche pensando en el examen."
+  },
+  {
+    "word": "madrugar",
+    "translation": "вставать очень рано",
+    "partOfSpeech": "verbo",
+    "example": "Mañana tengo que madrugar para ir al aeropuerto."
+  },
+  {
+    "word": "hogareño",
+    "translation": "домашний, любящий сидеть дома",
+    "partOfSpeech": "adjetivo",
+    "example": "Soy muy hogareño, prefiero quedarme en casa."
+  },
+  {
+    "word": "empapado",
+    "translation": "промокший",
+    "partOfSpeech": "adjetivo",
+    "example": "Llegué empapado por la lluvia."
+  },
+  {
+    "word": "aprovechar",
+    "translation": "воспользоваться, извлечь пользу",
+    "partOfSpeech": "verbo",
+    "example": "Hay que aprovechar las oportunidades."
+  },
+  {
+    "word": "padecer",
+    "translation": "страдать от чего-то",
+    "partOfSpeech": "verbo",
+    "example": "Padece de migrañas desde hace años."
+  },
+  {
+    "word": "cotillear",
+    "translation": "сплетничать",
+    "partOfSpeech": "verbo",
+    "example": "A ella le encanta cotillear sobre los vecinos."
+  },
+  {
+    "word": "despistado",
+    "translation": "рассеянный, забывчивый",
+    "partOfSpeech": "adjetivo",
+    "example": "Siempre pierdo las llaves, soy muy despistado."
+  },
+  {
+    "word": "aturdido",
+    "translation": "ошеломлённый, растерянный",
+    "partOfSpeech": "adjetivo",
+    "example": "Después del golpe quedó aturdido."
+  },
+  {
+    "word": "brindar",
+    "translation": "провозглашать тост",
+    "partOfSpeech": "verbo",
+    "example": "Vamos a brindar por nuestra amistad."
+  },
+  {
+    "word": "antojo",
+    "translation": "прихоть, внезапное желание",
+    "partOfSpeech": "sustantivo",
+    "example": "Tengo antojo de comer chocolate."
+  },
+  {
+    "word": "mareado",
+    "translation": "испытывающий головокружение, укачанный",
+    "partOfSpeech": "adjetivo",
+    "example": "Me siento mareado después del viaje en barco."
+  },
+  {
+    "word": "fastidiar",
+    "translation": "досаждать, раздражать",
+    "partOfSpeech": "verbo",
+    "example": "Me fastidia que llegues tarde."
+  },
+  {
+    "word": "chaparrón",
+    "translation": "ливень",
+    "partOfSpeech": "sustantivo",
+    "example": "Nos sorprendió un chaparrón en el camino."
+  },
+  {
+    "word": "arrasar",
+    "translation": "сметать, разрушать, иметь большой успех",
+    "partOfSpeech": "verbo",
+    "example": "El huracán arrasó el pueblo."
+  }
+]
