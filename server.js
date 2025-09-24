@@ -1,44 +1,32 @@
 require("dotenv").config();
 const express = require("express");
-const bot = require("./botLogic");
-const { setupWordOfDay } = require("./modules/wordOfDay");
+const { Telegraf } = require("telegraf");
+const cron = require("node-cron");
+const wordOfDay = require("./modules/wordOfDay");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const bot = new Telegraf(process.env.BOT_TOKEN);
 
-// Поддержка JSON
-app.use(express.json());
+// Основная логика бота
+require("./botLogic"); // ⚠️ без (bot), потому что botLogic.js уже экспортирует bot
 
-// Webhook для Telegram
-app.post(`/telegram/${process.env.BOT_TOKEN}`, (req, res) => {
-  bot.handleUpdate(req.body, res);
+// эндпоинт для проверки
+app.get("/", (req, res) => {
+  res.send("🤖 Toka Bot работает");
 });
 
-// Тестовый роут для проверки бота
-app.get("/", (req, res) => res.send("✅ Toka Bot работает"));
-
-// ==========================
-// 🔹 Новый эндпоинт: тест «Слово дня»
-// ==========================
-const wod = setupWordOfDay(bot, {
-  timezone: "Europe/Madrid",
-  hour: 10,
-  minute: 0,
-});
-
+// эндпоинт для теста слова дня
 app.get("/test-wod", async (req, res) => {
-  try {
-    await wod.broadcast();
-    res.send("✅ Тестовая рассылка «Слово дня» отправлена");
-  } catch (err) {
-    console.error("Ошибка тестовой рассылки:", err);
-    res.status(500).send("❌ Ошибка при отправке тестового слова дня");
-  }
+  await wordOfDay.sendWordOfDay(bot);
+  res.send("✅ WOD отправлено");
 });
 
-// ==========================
-// Запуск сервера
-// ==========================
-app.listen(PORT, () => {
-  console.log(`🚀 Сервер запущен на порту ${PORT}`);
+// привязка вебхука
+app.use(bot.webhookCallback("/telegram"));
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, async () => {
+  const webhookUrl = `${process.env.RENDER_EXTERNAL_URL}/telegram`;
+  await bot.telegram.setWebhook(webhookUrl);
+  console.log(`🚀 Сервер запущен: ${webhookUrl}`);
 });
